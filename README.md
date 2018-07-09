@@ -9,6 +9,7 @@ It's completely usable though.
 
 ## Current Features
 * ACES filmic tonemapping, like Unreal 4.
+* High quality adaptation, featuring highly contrasting lights and shadows.
 * Physically-correct bloom with very smooth blurring.
 * WIP SMAA implementation in the depth of field shader.
 * Various post-processing features, like brightness, contrast, saturation and temperature controls, as well as vignette, chromatic aberration and film grain.
