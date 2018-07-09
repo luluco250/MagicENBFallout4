@@ -2,7 +2,7 @@
 
 ## Description
 
-My own set of shaders for ENB for Fallout 4. This preset aims for *actual* realism and performance. If your game runs at a solid 60 FPS on vanilla, it'll continue to do so under these effects.
+My own set of shaders for ENB for Fallout 4. This preset aims for *actual* realism (with some filmic deviations) and performance. If your game runs at a solid 60 FPS on vanilla, it'll continue to do so under these effects.
 
 This is a work in progress, so not all shaders are complete and some things might break or not be optimized enough.
 It's completely usable though.
