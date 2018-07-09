@@ -20,3 +20,9 @@ To install, simply install the original ENB preset (from enbdev.com) and copy-pa
 * F10: Disable/Enable ENB
 * F12: Show/Hide ENB Menu
 * PrintScreen: Take Screenshot
+
+## Screenshots
+
+![Screenshot](https://i.imgur.com/GwAXd1o.png)
+![Screenshot](https://i.imgur.com/AYByPxE.png)
+![Screenshot](https://i.imgur.com/JhUadpO.png)
