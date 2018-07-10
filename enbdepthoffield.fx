@@ -2,31 +2,14 @@
 	Magic ENB
 */
 
+#include "enb_include/Common.hlsl"
 #include "enb_include/Macros.hlsl"
 
   //========//
  //Uniforms//
 //========//
 
-float4 Timer;
-float4 ScreenSize;
-float AdaptiveQuality;
-float4 Weather;
-float4 TimeOfDay1;
-float4 TimeOfDay2;
-float ENightDayFactor;
-float EInteriorFactor;
-
-float4 tempF1;
-float4 tempF2;
-float4 tempF3;
-float4 tempInfo1;
-float4 tempInfo2;
-
 float4 DofParameters;
-
-static const float2 resolution = float2(ScreenSize.x, ScreenSize.x * ScreenSize.w);
-static const float2 pixelsize = float2(ScreenSize.y, ScreenSize.y * ScreenSize.z);
 
   //========//
  //Textures//
@@ -49,17 +32,6 @@ Texture2D RenderTargetR16F;
 Texture2D RenderTargetR32F;
 Texture2D RenderTargetRGB32F;
 
-SamplerState sPoint {
-	Filter = MIN_MAG_MIP_POINT;
-	AddressU = Clamp;
-	AddressV = Clamp;
-};
-SamplerState sLinear {
-	Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = Clamp;
-	AddressV = Clamp;
-};
-
   //==========//
  //SMAA Setup//
 //==========//
@@ -73,7 +45,7 @@ Texture2D searchTex <string ResourceName = "enb_textures/SearchTex.dds";>;
 #define edgesTex RenderTargetRGB32F
 #define blendTex RenderTargetRGBA32
 
-#define SMAA_RT_METRICS float4(pixelsize, resolution)
+#define SMAA_RT_METRICS float4(uPixelSize, uResolution)
 #define SMAA_HLSL_4_1
 #define SMAA_PRESET_ULTRA
 #define SMAA_PREDICATION 1
@@ -82,14 +54,6 @@ Texture2D searchTex <string ResourceName = "enb_textures/SearchTex.dds";>;
   //=======//
  //Shaders//
 //=======//
-
-void VS_PostProcess(
-	float3 vertex         : POSITION,
-	out float4 position   : SV_POSITION,
-	inout float2 texcoord : TEXCOORD
-) {
-	position = float4(vertex, 1.0);
-}
 
 void VS_SMAA_EdgeDetection(
 	float3 vertex			: POSITION,

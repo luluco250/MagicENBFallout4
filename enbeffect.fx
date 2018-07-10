@@ -2,38 +2,24 @@
 	Magic ENB
 */
 
+#include "enb_include/Common.hlsl"
 #include "enb_include/ACES.hlsl"
 
   //========//
  //Uniforms//
 //========//
 
-float4 Timer;
-float4 ScreenSize;
-float4 AdaptiveQuality;
-float4 Weather;
-float4 TimeOfDay1;
-float4 TimeOfDay2;
-float  ENightDayFactor;
-float  EInteriorFactor;
-
-float4 tempF1;
-float4 tempF2;
-float4 tempF3;
-float4 tempInfo1;
-float4 tempInfo2;
-
 float4 Params01[6];
 float4 ENBParams01;
 
-float fExposure <
+float uExposure <
 	string UIName   = "Exposure";
 	string UIWidget = "spinner";
 	float UIMin     = 0.01;
 	float UIMax     = 3.0;
 > = 0.5;
 
-float fBloom_Intensity <
+float uBloom_Intensity <
 	string UIName   = "Bloom Intensity";
 	string UIWidget = "spinner";
 	float UIMin     = 0.0;
@@ -51,28 +37,9 @@ Texture2D TextureDepth;
 Texture2D TextureAdaptation;
 Texture2D TextureAperture;
 
-SamplerState sPoint {
-	Filter = MIN_MAG_MIP_POINT;
-	AddressU = Clamp;
-	AddressV = Clamp;
-};
-SamplerState sLinear {
-	Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = Clamp;
-	AddressV = Clamp;
-};
-
   //=======//
  //Shaders//
 //=======//
-
-void VS_PostProcess(
-	float3 vertex         : POSITION,
-	out float4 position   : SV_POSITION,
-	inout float2 texcoord : TEXCOORD
-) {
-	position = float4(vertex, 1.0);
-}
 
 float4 PS_Magic(
 	float4 position : SV_POSITION,
@@ -80,10 +47,10 @@ float4 PS_Magic(
 ) : SV_TARGET {
 	float3 color = TextureColor.Sample(sPoint, uv).rgb;
 	float3 bloom = TextureBloom.Sample(sLinear, uv).rgb;
-	color += bloom * fBloom_Intensity;
+	color += bloom * uBloom_Intensity;
 
 	float adapt = TextureAdaptation.Sample(sPoint, uv).x;
-	float exposure = fExposure / (adapt + 0.001);
+	float exposure = uExposure / (adapt + 0.001);
 
 	color *= exposure;
 	color  = ACESFitted(color);

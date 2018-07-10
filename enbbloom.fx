@@ -2,13 +2,15 @@
 	Magic ENB
 */
 
+#include "enb_include/Common.hlsl"
+
   //======//
  //Macros//
 //======//
 
 // Controls how each bloom step/texture is distributed.
 // 0 = Normal, 1 = Detailed/Clear, 2 = Smooth/Foggy
-#define BLOOM_DISTRIBUTION 1
+#define BLOOM_DISTRIBUTION 0
 
   //=========//
  //Constants//
@@ -72,25 +74,6 @@ static const float cBloomWeights[cBloomSteps] = {
 };
 
   //========//
- //Uniforms//
-//========//
-
-float4 Timer;
-float4 ScreenSize;
-float AdaptiveQuality;
-float4 Weather;
-float4 TimeOfDay1;
-float4 TimeOfDay2;
-float ENightDayFactor;
-float EInteriorFactor;
-
-float4 tempF1;
-float4 tempF2;
-float4 tempF3;
-float4 tempInfo1;
-float4 tempInfo2;
-
-  //========//
  //Textures//
 //========//
 
@@ -109,33 +92,9 @@ Texture2D RenderTarget16;
 Texture2D RenderTargetRGBA32;
 Texture2D RenderTargetRGBA64F;
 
-SamplerState sPoint {
-	Filter   = MIN_MAG_MIP_POINT;
-	AddressU = Clamp;
-	AddressV = Clamp;
-};
-SamplerState sLinear {
-	Filter   = MIN_MAG_MIP_LINEAR;
-	AddressU = Clamp;
-	AddressV = Clamp;
-};
-SamplerState sSplit {
-	Filter   = MIN_MAG_MIP_LINEAR;
-	AddressU = Border;
-	AddressV = Border;
-};
-
   //=========//
  //Functions//
 //=========//
-
-float2 get_resolution() {
-	return float2(ScreenSize.x, ScreenSize.x * ScreenSize.w);
-}
-
-float2 get_pixel_size() {
-	return float2(ScreenSize.y, ScreenSize.y * ScreenSize.z);
-}
 
 float3 box_blur(Texture2D tex, float2 uv, float2 ps) {
 	return (tex.Sample(sLinear, uv - ps * 0.5).rgb +
@@ -180,21 +139,13 @@ float3 gaussian_blur(Texture2D tex, float2 uv, float2 dir) {
  //Shaders//
 //=======//
 
-void VS_PostProcess(
-	float3 vertex         : POSITION,
-	out float4 position   : SV_POSITION,
-	inout float2 texcoord : TEXCOORD
-) {
-	position = float4(vertex, 1.0);
-}
-
 float4 PS_DownSample(
 	float4 position : SV_POSITION,
 	float2 uv       : TEXCOORD,
 	uniform Texture2D tex,
 	uniform float size
 ) : SV_TARGET {
-	float2 ps = get_pixel_size() * size;
+	float2 ps = uPixelSize * size;
 	return float4(box_blur(tex, uv, ps), 1.0);
 }
 
