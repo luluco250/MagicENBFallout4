@@ -9,8 +9,8 @@
 //======//
 
 // Controls how each bloom step/texture is distributed.
-// 0 = Normal, 1 = Detailed/Clear, 2 = Smooth/Foggy
-#define BLOOM_DISTRIBUTION 0
+// 0: Normal, 1: Detailed/Clear, 2: Smooth/Foggy, 3: Gaussian
+#define BLOOM_DISTRIBUTION 3
 
   //=========//
  //Constants//
@@ -23,9 +23,9 @@ static const int cBloomSteps = 7;
 	Python code for this:
 
 	Normal:
-	###########################################
+	###############################################
 	for i in range(7): print(1 / 7, end=",\n")
-	###########################################
+	###############################################
 
 	Detailed/Clear:
 	###############################################
@@ -44,6 +44,10 @@ static const int cBloomSteps = 7;
 	###############################################
 
 	Then just remove the last comma.
+
+	For gaussian you can use my gaussian distribution generator 
+	(https://github.com/luluco250/gaussian_gen) with the following command line:
+	--> "gaussian_gen 7 7"
 */
 static const float cBloomWeights[cBloomSteps] = {
 	#if BLOOM_DISTRIBUTION == 1 // Detailed
@@ -62,6 +66,14 @@ static const float cBloomWeights[cBloomSteps] = {
 	0.12598425196850394,
 	0.25196850393700787,
 	0.5039370078740157
+	#elif BLOOM_DISTRIBUTION == 3 // Gaussian
+	0.056992,
+	0.056413,
+	0.054712,
+	0.051991,
+	0.048407,
+	0.044159,
+	0.039471
 	#else // Normal
 	0.14285714285714285,
 	0.14285714285714285,
@@ -72,6 +84,17 @@ static const float cBloomWeights[cBloomSteps] = {
 	0.14285714285714285
 	#endif
 };
+
+  //========//
+ //Uniforms//
+//========//
+
+float uDistribution <
+	string UIName   = "Distribution";
+	string UIWidget = "spinner";
+	float  UIMin    = 1.0;
+	float  UIMax    = 100.0;
+> = 1.0;
 
   //========//
  //Textures//
@@ -183,10 +206,10 @@ float4 PS_Blend(
 		RenderTarget16.Sample(sLinear, uv).rgb
 	};
 
-	float3 bloom = blooms[0] * cBloomWeights[0];
+	float3 bloom = blooms[0] * gaussian(0, uDistribution); //cBloomWeights[0];
 	[unroll]
 	for (int i = 1; i < cBloomSteps; ++i)
-		bloom += blooms[i] * cBloomWeights[i];
+		bloom += blooms[i] * gaussian(i, uDistribution); //* cBloomWeights[i];
 
 	return float4(bloom, 1.0);
 }

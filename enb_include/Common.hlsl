@@ -7,6 +7,12 @@
 	This file contains common utilities used in all shaders.
 */
 
+  //=========//
+ //Constants//
+//=========//
+
+static const float cPI = 3.1415926535897932384626433832795;
+
   //========//
  //Uniforms//
 //========//
@@ -151,6 +157,13 @@ float2 scale_uv(float2 uv, float2 scale, float2 center = 0.5) {
 
 float3 get_luma_linear(float3 color) {
 	return dot(color, float3(0.2125, 0.7154, 0.0721));
+}
+
+float gaussian(float x, float sigma) {
+	float ss = sigma * sigma;
+	float a = 1.0 / sqrt(2.0 * cPI * ss);
+	float b = (x * x) / (2.0 * ss);
+	return a * exp(-b);
 }
 
   //=======//

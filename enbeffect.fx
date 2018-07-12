@@ -15,15 +15,15 @@ float4 ENBParams01;
 float uExposure <
 	string UIName   = "Exposure";
 	string UIWidget = "spinner";
-	float UIMin     = 0.01;
-	float UIMax     = 3.0;
+	float  UIMin     = 0.01;
+	float  UIMax     = 3.0;
 > = 0.5;
 
 float uBloom_Intensity <
 	string UIName   = "Bloom Intensity";
 	string UIWidget = "spinner";
-	float UIMin     = 0.0;
-	float UIMax     = 10.0;
+	float  UIMin     = 0.0;
+	float  UIMax     = 10.0;
 > = 1.0;
 
   //========//
