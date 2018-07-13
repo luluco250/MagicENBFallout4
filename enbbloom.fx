@@ -49,7 +49,7 @@ static const int cBloomSteps = 7;
 	(https://github.com/luluco250/gaussian_gen) with the following command line:
 	--> "gaussian_gen 7 7"
 */
-static const float cBloomWeights[cBloomSteps] = {
+/*static const float cBloomWeights[cBloomSteps] = {
 	#if BLOOM_DISTRIBUTION == 1 // Detailed
 	0.5039370078740157,
 	0.25196850393700787,
@@ -83,14 +83,21 @@ static const float cBloomWeights[cBloomSteps] = {
 	0.14285714285714285,
 	0.14285714285714285
 	#endif
-};
+};*/
 
   //========//
  //Uniforms//
 //========//
 
-float uDistribution <
-	string UIName   = "Distribution";
+float uMean <
+	string UIName   = "Distribution Mean";
+	string UIWidget = "spinner";
+	float  UIMin    = 0.0;
+	float  UIMax    = 100.0;
+> = 0.0;
+
+float uVariance <
+	string UIName   = "Distribution Variance";
 	string UIWidget = "spinner";
 	float  UIMin    = 1.0;
 	float  UIMax    = 100.0;
@@ -206,10 +213,10 @@ float4 PS_Blend(
 		RenderTarget16.Sample(sLinear, uv).rgb
 	};
 
-	float3 bloom = blooms[0] * gaussian(0, uDistribution); //cBloomWeights[0];
+	float3 bloom = blooms[0] * normal_distribution(0, uMean, uVariance); //cBloomWeights[0];
 	[unroll]
 	for (int i = 1; i < cBloomSteps; ++i)
-		bloom += blooms[i] * gaussian(i, uDistribution); //* cBloomWeights[i];
+		bloom += blooms[i] * normal_distribution(i, uMean, uVariance); //* cBloomWeights[i];
 
 	return float4(bloom, 1.0);
 }

@@ -71,7 +71,7 @@ float uFilmGrain_Intensity <
 	string UIName   = "Film Grain Intensity";
 	string UIWidget = "spinner";
 	float  UIMin    = 0.0;
-	float  UIMax    = 1.0;
+	float  UIMax    = 3.0;
 > = 1.0;
 
 float uFilmGrain_Speed <
@@ -123,7 +123,8 @@ float get_film_grain(float2 uv) {
 	float t = Timer.x * 16777.216 * uFilmGrain_Speed;
 	float seed = dot(uv, float2(12.9898, 78.233));
 	float noise = frac(sin(seed) * 43758.5453 + t);
-	return gaussian(noise, uFilmGrain_Mean, uFilmGrain_Variance * uFilmGrain_Variance);
+	//return gaussian(noise, uFilmGrain_Mean, uFilmGrain_Variance * uFilmGrain_Variance);
+	return normal_distribution(noise, uFilmGrain_Mean, uFilmGrain_Variance);
 }
 
   //=======//

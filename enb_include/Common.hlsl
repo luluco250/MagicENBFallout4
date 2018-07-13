@@ -159,11 +159,11 @@ float3 get_luma_linear(float3 color) {
 	return dot(color, float3(0.2125, 0.7154, 0.0721));
 }
 
-float gaussian(float x, float sigma) {
-	float ss = sigma * sigma;
-	float a = 1.0 / sqrt(2.0 * cPI * ss);
-	float b = (x * x) / (2.0 * ss);
-	return a * exp(-b);
+float normal_distribution(float x, float mean, float variance) {
+	float v = variance * variance;
+	float a = 1.0 / sqrt(2.0 * cPI * v);
+	float b = ((x - mean) * (x - mean)) / (2.0 * v);
+	return a * exp(-(b));
 }
 
   //=======//

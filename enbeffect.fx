@@ -22,9 +22,16 @@ float uExposure <
 float uBloom_Intensity <
 	string UIName   = "Bloom Intensity";
 	string UIWidget = "spinner";
-	float  UIMin     = 0.0;
-	float  UIMax     = 10.0;
+	float  UIMin    = 0.0;
+	float  UIMax    = 10.0;
 > = 1.0;
+
+float uDirt_Intensity <
+	string UIName   = "Dirt Intensity";
+	string UIWidget = "spinner";
+	float  UIMin    = 0.0;
+	float  UIMax    = 10.0;
+> = 0.0;
 
   //========//
  //Textures//
@@ -37,6 +44,8 @@ Texture2D TextureDepth;
 Texture2D TextureAdaptation;
 Texture2D TextureAperture;
 
+Texture2D tDirt <string ResourceName = "enb_textures/Dirt.png";>;
+
   //=======//
  //Shaders//
 //=======//
@@ -47,6 +56,10 @@ float4 PS_Magic(
 ) : SV_TARGET {
 	float3 color = TextureColor.Sample(sPoint, uv).rgb;
 	float3 bloom = TextureBloom.Sample(sLinear, uv).rgb;
+
+	float3 dirt = tDirt.Sample(sLinear, uv).rgb;
+	bloom += bloom * dirt * uDirt_Intensity;
+
 	color += bloom * uBloom_Intensity;
 
 	float adapt = TextureAdaptation.Sample(sPoint, uv).x;
