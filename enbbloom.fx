@@ -4,6 +4,13 @@
 
 #include "enb_include/Common.hlsl"
 
+  //=========//
+ //Constants//
+//=========//
+
+static const int cBloomSteps = 7;
+static const int cGaussianSamples = 13;
+
   //========//
  //Uniforms//
 //========//
