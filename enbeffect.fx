@@ -58,7 +58,8 @@ float4 PS_Magic(
 	float3 bloom = TextureBloom.Sample(sLinear, uv).rgb;
 
 	float3 dirt = tDirt.Sample(sLinear, uv).rgb;
-	bloom += bloom * dirt * uDirt_Intensity;
+	//bloom += bloom * dirt * uDirt_Intensity;
+	bloom = lerp(bloom, dirt, saturate(bloom * uDirt_Intensity));
 
 	color += bloom * uBloom_Intensity;
 

@@ -29,6 +29,13 @@ float uVariance <
 	float  UIMax    = 100.0;
 > = 1.0;
 
+float uHeat <
+	string UIName   = "Heat";
+	string UIWidget = "spinner";
+	float  UIMin    = 0.0;
+	float  UIMax    = 1.0;
+> = 0.0;
+
   //========//
  //Textures//
 //========//
@@ -143,6 +150,9 @@ float4 PS_Blend(
 	[unroll]
 	for (int i = 1; i < cBloomSteps; ++i)
 		bloom += blooms[i] * normal_distribution(i, uMean, uVariance); //* cBloomWeights[i];
+
+	
+	bloom = lerp(bloom, bloom * bloom, uHeat);
 
 	return float4(bloom, 1.0);
 }
